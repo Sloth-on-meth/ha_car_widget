@@ -86,6 +86,11 @@ class Prefs(context: Context) {
     var pending: String
         get() = sp.getString("s_pending", "") ?: ""
         set(v) = sp.edit().putString("s_pending", v).apply()
+    /** True while a door-open command waits for the switch to confirm. */
+    var doorPending: Boolean
+        // Auto-expires after 30 s so a killed worker can't leave the spinner stuck.
+        get() = System.currentTimeMillis() - sp.getLong("s_door_pending_at", 0L) < 30_000
+        set(v) = sp.edit().putLong("s_door_pending_at", if (v) System.currentTimeMillis() else 0L).apply()
     /** Short result message after a command ("Locked ✓"), cleared a few seconds later. */
     var result: String
         get() = sp.getString("s_result", "") ?: ""

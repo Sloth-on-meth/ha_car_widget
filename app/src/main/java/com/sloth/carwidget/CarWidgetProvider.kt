@@ -28,6 +28,11 @@ class CarWidgetProvider : AppWidgetProvider() {
             ACTION_LOCK -> command(context, CarWorker.ACTION_LOCK)
             ACTION_UNLOCK -> command(context, CarWorker.ACTION_UNLOCK)
             ACTION_DOOR -> {
+                val p = Prefs(context)
+                if (p.doorPending) return
+                p.doorPending = true
+                p.result = ""
+                redrawAll(context)
                 Feedback.vibrate(context, Feedback.Kind.TAP)
                 CarWorker.run(context, CarWorker.ACTION_DOOR)
             }
@@ -68,6 +73,11 @@ class CarWidgetProvider : AppWidgetProvider() {
                 Intent(context, CarWidgetProvider::class.java).setAction(action),
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
+
+        private fun spinner(v: RemoteViews, btn: Int, prog: Int, on: Boolean) {
+            v.setViewVisibility(prog, if (on) View.VISIBLE else View.GONE)
+            v.setInt(btn, "setImageAlpha", if (on) 0 else 255)
+        }
 
         private fun build(context: Context): RemoteViews {
             val p = Prefs(context)
@@ -124,14 +134,16 @@ class CarWidgetProvider : AppWidgetProvider() {
             }
             v.setImageViewResource(R.id.status_icon, if (locked) R.drawable.ic_lock else R.drawable.ic_lock_open)
             v.setInt(R.id.status_icon, "setColorFilter", color)
-            // Spinner replaces the icon while a command is in flight.
+            // The tapped button shows a spinner until the command is confirmed.
             val busy = p.pending.isNotEmpty()
-            v.setViewVisibility(R.id.status_icon, if (busy) View.GONE else View.VISIBLE)
-            v.setViewVisibility(R.id.status_progress, if (busy) View.VISIBLE else View.GONE)
+            spinner(v, R.id.btn_lock, R.id.prog_lock, p.pending == "locked")
+            spinner(v, R.id.btn_unlock, R.id.prog_unlock, p.pending == "unlocked")
+            spinner(v, R.id.btn_door, R.id.prog_door, p.doorPending)
 
 
             val (sub, subColor) = when {
                 busy -> (if (p.pending == "locked") "Locking…" else "Unlocking…") to GREY
+                p.doorPending -> "Opening door…" to GREY
                 p.result.isNotEmpty() -> p.result to (if (p.resultOk) GREEN else RED)
                 p.error.isNotEmpty() -> p.error to RED
                 alerts.isNotEmpty() -> alerts.joinToString(", ") to ORANGE

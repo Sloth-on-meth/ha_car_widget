@@ -2,6 +2,7 @@ package com.sloth.carwidget
 
 import android.content.Context
 import androidx.work.*
+import kotlinx.coroutines.delay
 import java.util.concurrent.TimeUnit
 
 /** Does all network work: optional lock/unlock command, then fetch state and redraw widgets. */
@@ -25,8 +26,22 @@ class CarWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, p
 
         if (action == ACTION_DOOR) {
             try {
+                val before = client.getState(prefs.doorEntity).lastChanged
                 client.callService("switch", "turn_on", prefs.doorEntity)
+                // Opener auto-offs after ~3 s; confirm by seeing it on, or its last_changed move.
+                var ok = false
+                repeat(20) {
+                    if (ok) return@repeat
+                    val st = client.getState(prefs.doorEntity)
+                    if (st.state == "on" || st.lastChanged != before) ok = true else delay(500)
+                }
+                prefs.doorPending = false
+                if (!ok) {
+                    fail("Door didn't confirm")
+                    return Result.success()
+                }
             } catch (e: Exception) {
+                prefs.doorPending = false
                 fail("Door failed: ${e.message ?: "error"}")
                 return Result.success()
             }

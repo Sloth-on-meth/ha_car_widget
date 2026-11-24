@@ -12,6 +12,7 @@ class HaClient(private val baseUrl: String, private val token: String) {
         val unit: String,
         val name: String,
         val attrs: JSONObject = JSONObject(),
+        val lastChanged: String = "",
     )
 
     fun getState(entityId: String): EntityState {
@@ -22,6 +23,7 @@ class HaClient(private val baseUrl: String, private val token: String) {
             unit = attrs.optString("unit_of_measurement", ""),
             name = attrs.optString("friendly_name", entityId),
             attrs = attrs,
+            lastChanged = json.optString("last_changed"),
         )
     }
 

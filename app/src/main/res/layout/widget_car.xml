@@ -24,15 +24,6 @@
             android:layout_height="30dp"
             android:src="@drawable/ic_lock" />
 
-        <ProgressBar
-            android:id="@+id/status_progress"
-            style="@android:style/Widget.Material.ProgressBar.Small"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:indeterminate="true"
-            android:indeterminateTint="#FFFFFF"
-            android:visibility="gone" />
-
         <ImageView
             android:id="@+id/warn_icon"
             android:layout_width="18dp"
@@ -99,35 +90,80 @@
             android:textSize="11sp" />
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/btn_lock"
+    <FrameLayout
         android:layout_width="38dp"
         android:layout_height="38dp"
-        android:layout_marginEnd="4dp"
-        android:background="@drawable/btn_ripple"
-        android:contentDescription="Lock"
-        android:padding="9dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_lock" />
+        android:layout_marginEnd="4dp">
 
-    <ImageButton
-        android:id="@+id/btn_unlock"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:background="@drawable/btn_ripple"
-        android:layout_marginEnd="4dp"
-        android:contentDescription="Unlock"
-        android:padding="9dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_lock_open" />
+        <ImageButton
+            android:id="@+id/btn_lock"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_ripple"
+            android:contentDescription="Lock"
+            android:padding="9dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_lock" />
 
-    <ImageButton
-        android:id="@+id/btn_door"
+        <ProgressBar
+            android:id="@+id/prog_lock"
+            style="@android:style/Widget.Material.ProgressBar.Small"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="#FFFFFF"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="38dp"
         android:layout_height="38dp"
-        android:background="@drawable/btn_ripple"
-        android:contentDescription="Open downstairs door"
-        android:padding="9dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_door" />
+        android:layout_marginEnd="4dp">
+
+        <ImageButton
+            android:id="@+id/btn_unlock"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_ripple"
+            android:contentDescription="Unlock"
+            android:padding="9dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_lock_open" />
+
+        <ProgressBar
+            android:id="@+id/prog_unlock"
+            style="@android:style/Widget.Material.ProgressBar.Small"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="#FFFFFF"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="38dp"
+        android:layout_height="38dp">
+
+        <ImageButton
+            android:id="@+id/btn_door"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_ripple"
+            android:contentDescription="Open downstairs door"
+            android:padding="9dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_door" />
+
+        <ProgressBar
+            android:id="@+id/prog_door"
+            style="@android:style/Widget.Material.ProgressBar.Small"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="#FFFFFF"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>
