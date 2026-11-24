@@ -24,6 +24,15 @@
             android:layout_height="30dp"
             android:src="@drawable/ic_lock" />
 
+        <ProgressBar
+            android:id="@+id/status_progress"
+            style="@android:style/Widget.Material.ProgressBar.Small"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:indeterminate="true"
+            android:indeterminateTint="#FFFFFF"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -87,7 +96,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="4dp"
-        android:background="@drawable/btn_bg"
+        android:background="@drawable/btn_ripple"
         android:contentDescription="Lock"
         android:padding="9dp"
         android:scaleType="fitCenter"
@@ -97,7 +106,7 @@
         android:id="@+id/btn_unlock"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@drawable/btn_bg"
+        android:background="@drawable/btn_ripple"
         android:contentDescription="Unlock"
         android:padding="9dp"
         android:scaleType="fitCenter"

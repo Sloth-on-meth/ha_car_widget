@@ -25,8 +25,8 @@ class CarWidgetProvider : AppWidgetProvider() {
         super.onReceive(context, intent)
         when (intent.action) {
             ACTION_REFRESH -> CarWorker.run(context)
-            ACTION_LOCK -> command(context, CarWorker.ACTION_LOCK, "Locking…")
-            ACTION_UNLOCK -> command(context, CarWorker.ACTION_UNLOCK, "Unlocking…")
+            ACTION_LOCK -> command(context, CarWorker.ACTION_LOCK)
+            ACTION_UNLOCK -> command(context, CarWorker.ACTION_UNLOCK)
         }
     }
 
@@ -40,8 +40,11 @@ class CarWidgetProvider : AppWidgetProvider() {
         private const val RED = 0xFFF44336.toInt()
         private const val GREY = 0xFF9E9E9E.toInt()
 
-        fun command(context: Context, action: String, label: String) {
-            Prefs(context).pending = label
+        fun command(context: Context, action: String) {
+            val p = Prefs(context)
+            p.pending = if (action == CarWorker.ACTION_LOCK) "locked" else "unlocked"
+            p.result = ""
+            Feedback.vibrate(context, Feedback.Kind.TAP)
             redrawAll(context)
             CarWorker.run(context, action)
         }
@@ -104,10 +107,15 @@ class CarWidgetProvider : AppWidgetProvider() {
             }
             v.setImageViewResource(R.id.status_icon, if (locked) R.drawable.ic_lock else R.drawable.ic_lock_open)
             v.setInt(R.id.status_icon, "setColorFilter", color)
+            // Spinner replaces the icon while a command is in flight.
+            val busy = p.pending.isNotEmpty()
+            v.setViewVisibility(R.id.status_icon, if (busy) View.GONE else View.VISIBLE)
+            v.setViewVisibility(R.id.status_progress, if (busy) View.VISIBLE else View.GONE)
 
 
             val (sub, subColor) = when {
-                p.pending.isNotEmpty() -> p.pending to GREY
+                busy -> (if (p.pending == "locked") "Locking…" else "Unlocking…") to GREY
+                p.result.isNotEmpty() -> p.result to (if (p.resultOk) GREEN else RED)
                 p.error.isNotEmpty() -> p.error to RED
                 alerts.isNotEmpty() -> alerts.joinToString(", ") to ORANGE
                 else -> "" to GREY

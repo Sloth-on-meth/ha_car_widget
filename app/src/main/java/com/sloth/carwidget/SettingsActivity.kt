@@ -32,6 +32,8 @@ class SettingsActivity : Activity() {
         val range = findViewById<EditText>(R.id.range_entity)
         val alerts = findViewById<EditText>(R.id.alert_entities)
         val confirm = findViewById<CheckBox>(R.id.confirm_unlock)
+        val sound = findViewById<CheckBox>(R.id.sound)
+        val vibrate = findViewById<CheckBox>(R.id.vibrate)
         val status = findViewById<TextView>(R.id.status)
 
         url.setText(prefs.baseUrl)
@@ -41,6 +43,8 @@ class SettingsActivity : Activity() {
         range.setText(prefs.rangeEntity)
         alerts.setText(prefs.alertEntities.joinToString("\n"))
         confirm.isChecked = prefs.confirmUnlock
+        sound.isChecked = prefs.sound
+        vibrate.isChecked = prefs.vibrate
 
         fun save() {
             prefs.baseUrl = url.text.toString()
@@ -50,6 +54,8 @@ class SettingsActivity : Activity() {
             prefs.rangeEntity = range.text.toString()
             prefs.alertEntities = alerts.text.lines()
             prefs.confirmUnlock = confirm.isChecked
+            prefs.sound = sound.isChecked
+            prefs.vibrate = vibrate.isChecked
         }
 
         findViewById<Button>(R.id.test).setOnClickListener {

@@ -51,6 +51,18 @@
             android:layout_marginTop="8dp"
             android:text="Ask before unlocking" />
 
+        <CheckBox
+            android:id="@+id/sound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chirp sounds" />
+
+        <CheckBox
+            android:id="@+id/vibrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vibrate" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

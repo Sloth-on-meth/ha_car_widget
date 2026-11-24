@@ -11,7 +11,7 @@ class ConfirmActivity : Activity() {
         AlertDialog.Builder(this)
             .setTitle("Unlock car?")
             .setPositiveButton("Unlock") { _, _ ->
-                CarWidgetProvider.command(this, CarWorker.ACTION_UNLOCK, "Unlocking…")
+                CarWidgetProvider.command(this, CarWorker.ACTION_UNLOCK)
                 finish()
             }
             .setNegativeButton("Cancel") { _, _ -> finish() }

@@ -57,10 +57,24 @@ class Prefs(context: Context) {
     var error: String
         get() = sp.getString("s_error", "") ?: ""
         set(v) = sp.edit().putString("s_error", v).apply()
-    /** Text shown while a lock/unlock command is in flight ("Locking…"). */
+    /** Target state of an in-flight command ("locked"/"unlocked"), or "" when idle. */
     var pending: String
         get() = sp.getString("s_pending", "") ?: ""
         set(v) = sp.edit().putString("s_pending", v).apply()
+    /** Short result message after a command ("Locked ✓"), cleared a few seconds later. */
+    var result: String
+        get() = sp.getString("s_result", "") ?: ""
+        set(v) = sp.edit().putString("s_result", v).apply()
+    var resultOk: Boolean
+        get() = sp.getBoolean("s_result_ok", true)
+        set(v) = sp.edit().putBoolean("s_result_ok", v).apply()
+
+    var sound: Boolean
+        get() = sp.getBoolean("sound", true)
+        set(v) = sp.edit().putBoolean("sound", v).apply()
+    var vibrate: Boolean
+        get() = sp.getBoolean("vibrate", true)
+        set(v) = sp.edit().putBoolean("vibrate", v).apply()
 
     companion object {
         private const val CAR = "speedy_gonyaris"
