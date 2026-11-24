@@ -23,6 +23,21 @@ class CarWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, p
         val client = HaClient(prefs.baseUrl, prefs.token)
         val action = inputData.getString(KEY_ACTION)
 
+        if (action == ACTION_DOOR) {
+            try {
+                client.callService("switch", "turn_on", prefs.doorEntity)
+            } catch (e: Exception) {
+                fail("Door failed: ${e.message ?: "error"}")
+                return Result.success()
+            }
+            prefs.result = "Door open ✓"
+            prefs.resultOk = true
+            CarWidgetProvider.redrawAll(ctx)
+            Feedback.play(ctx, Feedback.Kind.LOCKED)
+            clearLater(ctx, 6)
+            return Result.success()
+        }
+
         if (action == ACTION_LOCK || action == ACTION_UNLOCK) {
             val locking = action == ACTION_LOCK
             try {
@@ -65,7 +80,7 @@ class CarWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, p
     }
 
     private suspend fun fail(msg: String) {
-        prefs.pending = ""
+        if (inputData.getString(KEY_ACTION) != ACTION_DOOR) prefs.pending = ""
         prefs.result = msg
         prefs.resultOk = false
         cancelPolls(applicationContext)
@@ -155,6 +170,7 @@ class CarWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, p
         const val KEY_CLEAR = "clear"
         const val ACTION_LOCK = "lock"
         const val ACTION_UNLOCK = "unlock"
+        const val ACTION_DOOR = "door"
         private const val PERIODIC = "car_periodic"
         private val POLLS = listOf(10L, 25L, 45L, 90L)
 

@@ -101,8 +101,8 @@
 
     <ImageButton
         android:id="@+id/btn_lock"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
         android:layout_marginEnd="4dp"
         android:background="@drawable/btn_ripple"
         android:contentDescription="Lock"
@@ -112,11 +112,22 @@
 
     <ImageButton
         android:id="@+id/btn_unlock"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
         android:background="@drawable/btn_ripple"
+        android:layout_marginEnd="4dp"
         android:contentDescription="Unlock"
         android:padding="9dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_lock_open" />
+
+    <ImageButton
+        android:id="@+id/btn_door"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:background="@drawable/btn_ripple"
+        android:contentDescription="Open downstairs door"
+        android:padding="9dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_door" />
 </LinearLayout>

@@ -27,6 +27,10 @@ class CarWidgetProvider : AppWidgetProvider() {
             ACTION_REFRESH -> CarWorker.run(context)
             ACTION_LOCK -> command(context, CarWorker.ACTION_LOCK)
             ACTION_UNLOCK -> command(context, CarWorker.ACTION_UNLOCK)
+            ACTION_DOOR -> {
+                Feedback.vibrate(context, Feedback.Kind.TAP)
+                CarWorker.run(context, CarWorker.ACTION_DOOR)
+            }
         }
     }
 
@@ -34,6 +38,7 @@ class CarWidgetProvider : AppWidgetProvider() {
         const val ACTION_REFRESH = "com.sloth.carwidget.REFRESH"
         const val ACTION_LOCK = "com.sloth.carwidget.LOCK"
         const val ACTION_UNLOCK = "com.sloth.carwidget.UNLOCK"
+        const val ACTION_DOOR = "com.sloth.carwidget.DOOR"
 
         private const val GREEN = 0xFF4CAF50.toInt()
         private const val ORANGE = 0xFFFF9800.toInt()
@@ -79,6 +84,8 @@ class CarWidgetProvider : AppWidgetProvider() {
                 )
             } else broadcast(context, ACTION_UNLOCK, 2)
             v.setOnClickPendingIntent(R.id.btn_unlock, unlockIntent)
+            v.setOnClickPendingIntent(R.id.btn_door, broadcast(context, ACTION_DOOR, 6))
+            v.setViewVisibility(R.id.btn_door, if (p.doorEntity.isBlank()) View.GONE else View.VISIBLE)
 
             if (!p.isConfigured) {
                 val open = PendingIntent.getActivity(

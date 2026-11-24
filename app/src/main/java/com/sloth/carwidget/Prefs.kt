@@ -39,6 +39,11 @@ class Prefs(context: Context) {
         get() = sp.getString("driving_entity", DEFAULT_DRIVING) ?: DEFAULT_DRIVING
         set(v) = sp.edit().putString("driving_entity", v.trim()).apply()
 
+    /** Switch that buzzes the downstairs door open. Blank = hide the button. */
+    var doorEntity: String
+        get() = sp.getString("door_entity", DEFAULT_DOOR) ?: DEFAULT_DOOR
+        set(v) = sp.edit().putString("door_entity", v.trim()).apply()
+
     var nagEnabled: Boolean
         get() = sp.getBoolean("nag", true)
         set(v) = sp.edit().putBoolean("nag", v).apply()
@@ -120,6 +125,7 @@ class Prefs(context: Context) {
         const val DEFAULT_LOCK = "lock.${CAR}_door_lock"
         const val DEFAULT_FUEL = "sensor.${CAR}_fuel_level"
         const val DEFAULT_RANGE = "sensor.${CAR}_fuel_range"
+        const val DEFAULT_DOOR = "switch.dooropener_zigbee"
         const val DEFAULT_TRACKER = "device_tracker.${CAR}_parking_location"
         const val DEFAULT_WARNING = "sensor.${CAR}_warning_lights"
         const val DEFAULT_HEALTH = "binary_sensor.${CAR}_vehicle_health"

@@ -34,6 +34,9 @@
         <TextView style="@style/Label" android:text="Range entity" />
         <EditText android:id="@+id/range_entity" style="@style/Entity" />
 
+        <TextView style="@style/Label" android:text="Downstairs door switch (blank = hide button)" />
+        <EditText android:id="@+id/door_entity" style="@style/Entity" />
+
         <TextView style="@style/Label" android:text="Parking location (device_tracker, for maps)" />
         <EditText android:id="@+id/tracker_entity" style="@style/Entity" />
 
