@@ -8,8 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.RemoteViews
-import java.text.DateFormat
-import java.util.Date
 
 class CarWidgetProvider : AppWidgetProvider() {
 
@@ -87,8 +85,7 @@ class CarWidgetProvider : AppWidgetProvider() {
                 v.setOnClickPendingIntent(R.id.status_area, open)
                 v.setImageViewResource(R.id.status_icon, R.drawable.ic_lock)
                 v.setInt(R.id.status_icon, "setColorFilter", GREY)
-                v.setTextViewText(R.id.status_title, "Set up")
-                v.setTextViewText(R.id.status_sub, "Tap to connect HA")
+                v.setTextViewText(R.id.status_sub, "Tap to set up")
                 v.setTextColor(R.id.status_sub, GREY)
                 v.setTextViewText(R.id.fuel, "–")
                 v.setTextViewText(R.id.range, "")
@@ -108,18 +105,11 @@ class CarWidgetProvider : AppWidgetProvider() {
             v.setImageViewResource(R.id.status_icon, if (locked) R.drawable.ic_lock else R.drawable.ic_lock_open)
             v.setInt(R.id.status_icon, "setColorFilter", color)
 
-            val title = when {
-                p.pending.isNotEmpty() -> p.pending
-                p.lockState.isEmpty() -> "…"
-                else -> p.lockState.replaceFirstChar { it.uppercase() }
-            }
-            v.setTextViewText(R.id.status_title, title)
 
             val (sub, subColor) = when {
+                p.pending.isNotEmpty() -> p.pending to GREY
                 p.error.isNotEmpty() -> p.error to RED
                 alerts.isNotEmpty() -> alerts.joinToString(", ") to ORANGE
-                p.updatedAt > 0 -> DateFormat.getTimeInstance(DateFormat.SHORT)
-                    .format(Date(p.updatedAt)) to GREY
                 else -> "" to GREY
             }
             v.setTextViewText(R.id.status_sub, sub)
