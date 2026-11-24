@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView style="@style/Label" android:text="Home Assistant URL" />
+        <EditText
+            android:id="@+id/url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="https://myhome.duckdns.org:8123"
+            android:inputType="textUri" />
+
+        <TextView style="@style/Label" android:text="Long-lived access token (HA → Profile → Security)" />
+        <EditText
+            android:id="@+id/token"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+
+        <TextView style="@style/Label" android:text="Lock entity" />
+        <EditText android:id="@+id/lock_entity" style="@style/Entity" />
+
+        <TextView style="@style/Label" android:text="Fuel level entity" />
+        <EditText android:id="@+id/fuel_entity" style="@style/Entity" />
+
+        <TextView style="@style/Label" android:text="Range entity" />
+        <EditText android:id="@+id/range_entity" style="@style/Entity" />
+
+        <TextView style="@style/Label" android:text="Warn when any of these are on (open / unlocked), one per line" />
+        <EditText
+            android:id="@+id/alert_entities"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:minLines="4"
+            android:textSize="13sp" />
+
+        <CheckBox
+            android:id="@+id/confirm_unlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Ask before unlocking" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/test"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Test" />
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+    </LinearLayout>
+</ScrollView>

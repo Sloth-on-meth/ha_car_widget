@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">HA Car Widget</string>
+    <string name="widget_desc">Lock, unlock, fuel and range from Home Assistant</string>
+</resources>
