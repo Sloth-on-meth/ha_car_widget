@@ -18,6 +18,10 @@ class SettingsActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         prefs = Prefs(this)
+        if (android.os.Build.VERSION.SDK_INT >= 33 &&
+            checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) !=
+            android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1)
 
         widgetId = intent?.extras?.getInt(
             AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID
@@ -32,6 +36,12 @@ class SettingsActivity : Activity() {
         val range = findViewById<EditText>(R.id.range_entity)
         val alerts = findViewById<EditText>(R.id.alert_entities)
         val confirm = findViewById<CheckBox>(R.id.confirm_unlock)
+        val tracker = findViewById<EditText>(R.id.tracker_entity)
+        val warning = findViewById<EditText>(R.id.warning_entity)
+        val health = findViewById<EditText>(R.id.health_entity)
+        val driving = findViewById<EditText>(R.id.driving_entity)
+        val nag = findViewById<CheckBox>(R.id.nag)
+        val nagMinutes = findViewById<EditText>(R.id.nag_minutes)
         val sound = findViewById<CheckBox>(R.id.sound)
         val vibrate = findViewById<CheckBox>(R.id.vibrate)
         val status = findViewById<TextView>(R.id.status)
@@ -44,6 +54,12 @@ class SettingsActivity : Activity() {
         alerts.setText(prefs.alertEntities.joinToString("\n"))
         confirm.isChecked = prefs.confirmUnlock
         sound.isChecked = prefs.sound
+        tracker.setText(prefs.trackerEntity)
+        warning.setText(prefs.warningEntity)
+        health.setText(prefs.healthEntity)
+        driving.setText(prefs.drivingEntity)
+        nag.isChecked = prefs.nagEnabled
+        nagMinutes.setText(prefs.nagMinutes.toString())
         vibrate.isChecked = prefs.vibrate
 
         fun save() {
@@ -55,6 +71,12 @@ class SettingsActivity : Activity() {
             prefs.alertEntities = alerts.text.lines()
             prefs.confirmUnlock = confirm.isChecked
             prefs.sound = sound.isChecked
+            prefs.trackerEntity = tracker.text.toString()
+            prefs.warningEntity = warning.text.toString()
+            prefs.healthEntity = health.text.toString()
+            prefs.drivingEntity = driving.text.toString()
+            prefs.nagEnabled = nag.isChecked
+            prefs.nagMinutes = nagMinutes.text.toString().toIntOrNull()?.coerceAtLeast(1) ?: 10
             prefs.vibrate = vibrate.isChecked
         }
 

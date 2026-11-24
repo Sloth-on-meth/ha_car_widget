@@ -7,7 +7,12 @@ import java.net.URL
 /** Minimal Home Assistant REST client. */
 class HaClient(private val baseUrl: String, private val token: String) {
 
-    data class EntityState(val state: String, val unit: String, val name: String)
+    data class EntityState(
+        val state: String,
+        val unit: String,
+        val name: String,
+        val attrs: JSONObject = JSONObject(),
+    )
 
     fun getState(entityId: String): EntityState {
         val json = JSONObject(request("GET", "/api/states/$entityId", null))
@@ -16,6 +21,7 @@ class HaClient(private val baseUrl: String, private val token: String) {
             state = json.optString("state"),
             unit = attrs.optString("unit_of_measurement", ""),
             name = attrs.optString("friendly_name", entityId),
+            attrs = attrs,
         )
     }
 

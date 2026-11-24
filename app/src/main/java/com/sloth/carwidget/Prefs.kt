@@ -26,6 +26,26 @@ class Prefs(context: Context) {
         get() = sp.getString("range_entity", DEFAULT_RANGE) ?: DEFAULT_RANGE
         set(v) = sp.edit().putString("range_entity", v.trim()).apply()
 
+    var trackerEntity: String
+        get() = sp.getString("tracker_entity", DEFAULT_TRACKER) ?: DEFAULT_TRACKER
+        set(v) = sp.edit().putString("tracker_entity", v.trim()).apply()
+    var warningEntity: String
+        get() = sp.getString("warning_entity", DEFAULT_WARNING) ?: DEFAULT_WARNING
+        set(v) = sp.edit().putString("warning_entity", v.trim()).apply()
+    var healthEntity: String
+        get() = sp.getString("health_entity", DEFAULT_HEALTH) ?: DEFAULT_HEALTH
+        set(v) = sp.edit().putString("health_entity", v.trim()).apply()
+    var drivingEntity: String
+        get() = sp.getString("driving_entity", DEFAULT_DRIVING) ?: DEFAULT_DRIVING
+        set(v) = sp.edit().putString("driving_entity", v.trim()).apply()
+
+    var nagEnabled: Boolean
+        get() = sp.getBoolean("nag", true)
+        set(v) = sp.edit().putBoolean("nag", v).apply()
+    var nagMinutes: Int
+        get() = sp.getInt("nag_minutes", 10)
+        set(v) = sp.edit().putInt("nag_minutes", v).apply()
+
     /** binary_sensors where "on" means open / unlocked. One per line. */
     var alertEntities: List<String>
         get() = (sp.getString("alert_entities", null) ?: DEFAULT_ALERTS.joinToString("\n"))
@@ -69,6 +89,25 @@ class Prefs(context: Context) {
         get() = sp.getBoolean("s_result_ok", true)
         set(v) = sp.edit().putBoolean("s_result_ok", v).apply()
 
+    /** Car location from the device_tracker, "" if unknown. */
+    var lat: String
+        get() = sp.getString("s_lat", "") ?: ""
+        set(v) = sp.edit().putString("s_lat", v).apply()
+    var lon: String
+        get() = sp.getString("s_lon", "") ?: ""
+        set(v) = sp.edit().putString("s_lon", v).apply()
+    /** Dashboard warning text ("2 warning lights"), "" when all fine. */
+    var warning: String
+        get() = sp.getString("s_warning", "") ?: ""
+        set(v) = sp.edit().putString("s_warning", v).apply()
+    /** When we first saw the car unlocked & parked (0 = not), and whether we already notified. */
+    var unlockedSince: Long
+        get() = sp.getLong("s_unlocked_since", 0L)
+        set(v) = sp.edit().putLong("s_unlocked_since", v).apply()
+    var nagged: Boolean
+        get() = sp.getBoolean("s_nagged", false)
+        set(v) = sp.edit().putBoolean("s_nagged", v).apply()
+
     var sound: Boolean
         get() = sp.getBoolean("sound", true)
         set(v) = sp.edit().putBoolean("sound", v).apply()
@@ -81,6 +120,10 @@ class Prefs(context: Context) {
         const val DEFAULT_LOCK = "lock.${CAR}_door_lock"
         const val DEFAULT_FUEL = "sensor.${CAR}_fuel_level"
         const val DEFAULT_RANGE = "sensor.${CAR}_fuel_range"
+        const val DEFAULT_TRACKER = "device_tracker.${CAR}_parking_location"
+        const val DEFAULT_WARNING = "sensor.${CAR}_warning_lights"
+        const val DEFAULT_HEALTH = "binary_sensor.${CAR}_vehicle_health"
+        const val DEFAULT_DRIVING = "binary_sensor.${CAR}_driving"
         val DEFAULT_ALERTS = listOf(
             "binary_sensor.${CAR}_driverseat_door",
             "binary_sensor.${CAR}_passengerseat_door",

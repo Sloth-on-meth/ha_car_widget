@@ -95,10 +95,20 @@ class CarWidgetProvider : AppWidgetProvider() {
                 return v
             }
             v.setOnClickPendingIntent(R.id.status_area, broadcast(context, ACTION_REFRESH, 4))
-            v.setOnClickPendingIntent(R.id.fuel_area, broadcast(context, ACTION_REFRESH, 5))
+            // Fuel area: open the parked car in a maps app (falls back to refresh if no location yet).
+            val fuelClick = if (p.lat.isNotEmpty()) {
+                val geo = android.net.Uri.parse("geo:${p.lat},${p.lon}?q=${p.lat},${p.lon}(Car)")
+                PendingIntent.getActivity(
+                    context, 5,
+                    Intent(Intent.ACTION_VIEW, geo).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            } else broadcast(context, ACTION_REFRESH, 5)
+            v.setOnClickPendingIntent(R.id.fuel_area, fuelClick)
 
             val locked = p.lockState == "locked"
-            val alerts = p.alerts
+            val alerts = listOfNotNull(p.warning.ifEmpty { null }) + p.alerts
+            v.setViewVisibility(R.id.warn_icon, if (p.warning.isNotEmpty()) View.VISIBLE else View.GONE)
             val color = when {
                 p.error.isNotEmpty() -> GREY
                 !locked -> RED
@@ -125,6 +135,16 @@ class CarWidgetProvider : AppWidgetProvider() {
             v.setViewVisibility(R.id.status_sub, if (sub.isEmpty()) View.GONE else View.VISIBLE)
 
             v.setTextViewText(R.id.fuel, p.fuel.ifEmpty { "–" })
+            val pct = p.fuel.filter { it.isDigit() }.toIntOrNull()
+            v.setTextColor(
+                R.id.fuel,
+                when {
+                    pct == null -> 0xFFFFFFFF.toInt()
+                    pct < 10 -> RED
+                    pct < 25 -> ORANGE
+                    else -> 0xFFFFFFFF.toInt()
+                }
+            )
             v.setTextViewText(R.id.range, p.range)
             return v
         }

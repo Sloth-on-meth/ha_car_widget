@@ -33,6 +33,14 @@
             android:indeterminateTint="#FFFFFF"
             android:visibility="gone" />
 
+        <ImageView
+            android:id="@+id/warn_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/ic_warning"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

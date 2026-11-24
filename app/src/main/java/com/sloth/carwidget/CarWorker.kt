@@ -88,7 +88,43 @@ class CarWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, p
                 ?.takeIf { it.state == "on" }
                 ?.let { shortName(id) }
         }
+        // Optional extras: each one is skipped silently if its entity is blank or missing.
+        optional(client, prefs.trackerEntity)?.let {
+            val la = it.attrs.optDouble("latitude", Double.NaN)
+            val lo = it.attrs.optDouble("longitude", Double.NaN)
+            if (!la.isNaN() && !lo.isNaN()) { prefs.lat = la.toString(); prefs.lon = lo.toString() }
+        }
+        val lights = optional(client, prefs.warningEntity)?.state?.toDoubleOrNull()?.toInt() ?: 0
+        val health = optional(client, prefs.healthEntity)?.state == "on"
+        prefs.warning = when {
+            lights > 0 -> if (lights == 1) "1 warning light" else "$lights warning lights"
+            health -> "Vehicle health issue"
+            else -> ""
+        }
+        val driving = optional(client, prefs.drivingEntity)?.state == "on"
+        checkUnlockedNag(driving)
+
         prefs.updatedAt = System.currentTimeMillis()
+    }
+
+    private fun optional(client: HaClient, id: String) =
+        if (id.isBlank()) null else runCatching { client.getState(id) }.getOrNull()
+
+    /** Notify once if the car sits unlocked (and not driving) for longer than nagMinutes. */
+    private fun checkUnlockedNag(driving: Boolean) {
+        val now = System.currentTimeMillis()
+        if (prefs.lockState != "unlocked" || driving) {
+            prefs.unlockedSince = 0
+            if (prefs.nagged) Notify.cancel(applicationContext)
+            prefs.nagged = false
+            return
+        }
+        if (prefs.unlockedSince == 0L) prefs.unlockedSince = now
+        val mins = (now - prefs.unlockedSince) / 60_000
+        if (prefs.nagEnabled && !prefs.nagged && prefs.pending.isEmpty() && mins >= prefs.nagMinutes) {
+            Notify.unlocked(applicationContext, mins)
+            prefs.nagged = true
+        }
     }
 
     /** binary_sensor.speedy_gonyaris_driverseat_window -> "Driver window" */
