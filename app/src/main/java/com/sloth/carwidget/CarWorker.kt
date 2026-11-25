@@ -108,7 +108,9 @@ class CarWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, p
         prefs.lockState = client.getState(prefs.lockEntity).state
 
         val fuel = client.getState(prefs.fuelEntity)
-        prefs.fuel = fuel.state.toDoubleOrNull()?.let { "${it.toInt()}${fuel.unit.ifEmpty { "%" }}" } ?: "–"
+        val pct = fuel.state.toDoubleOrNull()
+        prefs.fuel = pct?.let { "${it.toInt()}${fuel.unit.ifEmpty { "%" }}" } ?: "–"
+        prefs.litres = if (pct != null && prefs.tankLitres > 0) "${Math.round(pct / 100 * prefs.tankLitres)} L" else ""
 
         val range = client.getState(prefs.rangeEntity)
         prefs.range = range.state.toDoubleOrNull()?.let { "${it.toInt()} ${range.unit}".trim() } ?: "–"
@@ -119,7 +121,12 @@ class CarWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, p
                 ?.let { shortName(id) }
         }
         // Optional extras: each one is skipped silently if its entity is blank or missing.
+        prefs.odometer = optional(client, prefs.odometerEntity)?.let { o ->
+            o.state.toDoubleOrNull()?.let { String.format("%,d %s", it.toLong(), o.unit).trim() }
+        } ?: ""
+
         optional(client, prefs.trackerEntity)?.let {
+            CarImage.update(applicationContext, prefs, client, it.attrs.optString("entity_picture", ""))
             val la = it.attrs.optDouble("latitude", Double.NaN)
             val lo = it.attrs.optDouble("longitude", Double.NaN)
             if (!la.isNaN() && !lo.isNaN()) { prefs.lat = la.toString(); prefs.lon = lo.toString() }

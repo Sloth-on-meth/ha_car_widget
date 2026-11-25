@@ -31,6 +31,23 @@ class HaClient(private val baseUrl: String, private val token: String) {
         request("POST", "/api/services/$domain/$service", JSONObject().put("entity_id", entityId).toString())
     }
 
+    /** Downloads an image; relative URLs (/api/...) go to HA with the token. */
+    fun downloadBytes(url: String): ByteArray {
+        val full = if (url.startsWith("http")) url else baseUrl + url
+        val conn = URL(full).openConnection() as HttpURLConnection
+        try {
+            conn.connectTimeout = 10_000
+            conn.readTimeout = 20_000
+            if (!url.startsWith("http") || full.startsWith(baseUrl)) {
+                conn.setRequestProperty("Authorization", "Bearer $token")
+            }
+            if (conn.responseCode !in 200..299) throw RuntimeException("image HTTP ${conn.responseCode}")
+            return conn.inputStream.use { it.readBytes() }
+        } finally {
+            conn.disconnect()
+        }
+    }
+
     private fun request(method: String, path: String, body: String?): String {
         val conn = URL(baseUrl + path).openConnection() as HttpURLConnection
         try {

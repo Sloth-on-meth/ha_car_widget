@@ -112,16 +112,22 @@ class CarWidgetProvider : AppWidgetProvider() {
                 return v
             }
             v.setOnClickPendingIntent(R.id.status_area, broadcast(context, ACTION_REFRESH, 4))
-            // Fuel area: open the parked car in a maps app (falls back to refresh if no location yet).
-            val fuelClick = if (p.lat.isNotEmpty()) {
+            v.setOnClickPendingIntent(R.id.fuel_area, broadcast(context, ACTION_REFRESH, 5))
+            // Map button: open the parked car in a maps app (refresh if no location yet).
+            val mapClick = if (p.lat.isNotEmpty()) {
                 val geo = android.net.Uri.parse("geo:${p.lat},${p.lon}?q=${p.lat},${p.lon}(Car)")
                 PendingIntent.getActivity(
-                    context, 5,
+                    context, 7,
                     Intent(Intent.ACTION_VIEW, geo).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
-            } else broadcast(context, ACTION_REFRESH, 5)
-            v.setOnClickPendingIntent(R.id.fuel_area, fuelClick)
+            } else broadcast(context, ACTION_REFRESH, 8)
+            v.setOnClickPendingIntent(R.id.btn_map, mapClick)
+
+            CarImage.load(context)?.let {
+                v.setImageViewBitmap(R.id.car_img, it)
+                v.setViewVisibility(R.id.car_img, View.VISIBLE)
+            }
 
             val locked = p.lockState == "locked"
             val alerts = listOfNotNull(p.warning.ifEmpty { null }) + p.alerts
@@ -164,7 +170,9 @@ class CarWidgetProvider : AppWidgetProvider() {
                     else -> 0xFFFFFFFF.toInt()
                 }
             )
-            v.setTextViewText(R.id.range, p.range)
+            v.setTextViewText(R.id.range, listOf(p.litres, p.range).filter { it.isNotEmpty() }.joinToString(" · "))
+            v.setTextViewText(R.id.odometer, p.odometer)
+            v.setViewVisibility(R.id.odometer, if (p.odometer.isEmpty()) View.GONE else View.VISIBLE)
             return v
         }
     }
