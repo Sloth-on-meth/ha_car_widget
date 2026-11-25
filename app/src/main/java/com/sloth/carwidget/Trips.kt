@@ -45,7 +45,7 @@ object Trips {
             if (!avg.isNaN()) add(String.format(Locale.getDefault(), "Avg %.0f km/h", avg))
             if (!fuelL.isNaN() && fuelL > 0) {
                 add(String.format(Locale.getDefault(), "%.2f L", fuelL))
-                if (km > 0.1) add(String.format(Locale.getDefault(), "%.1f L/100km", fuelL / km * 100))
+                if (km > 0.1) add(String.format(Locale.getDefault(), "%.1f km/L", km / fuelL))
             }
             if (score >= 0) add("Score $score")
         }.joinToString(" · ")
