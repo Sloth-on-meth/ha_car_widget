@@ -45,8 +45,6 @@ class CarWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, p
                 fail("Door failed: ${e.message ?: "error"}")
                 return Result.success()
             }
-            prefs.result = "Door open ✓"
-            prefs.resultOk = true
             CarWidgetProvider.redrawAll(ctx)
             Feedback.play(ctx, Feedback.Kind.LOCKED)
             clearLater(ctx, 6)
@@ -58,7 +56,9 @@ class CarWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, p
             try {
                 client.callService("lock", if (locking) "lock" else "unlock", prefs.lockEntity)
             } catch (e: Exception) {
-                fail("${if (locking) "Lock" else "Unlock"} failed: ${e.message ?: "error"}")
+                runCatching { fetch(client) }
+                fail(if (locking) lockBlocked() ?: "Lock failed: ${e.message ?: "error"}"
+                     else "Unlock failed: ${e.message ?: "error"}")
                 return Result.success()
             }
             // The car takes a while to report back; poll a few times.
@@ -83,16 +83,19 @@ class CarWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, p
         if (target.isEmpty()) return
         if (prefs.lockState == target) {
             prefs.pending = ""
-            prefs.result = if (target == "locked") "Locked ✓" else "Unlocked ✓"
-            prefs.resultOk = true
             cancelPolls(applicationContext)
             CarWidgetProvider.redrawAll(applicationContext)
             Feedback.play(applicationContext, if (target == "locked") Feedback.Kind.LOCKED else Feedback.Kind.UNLOCKED)
             clearLater(applicationContext, 8)
         } else if (inputData.getBoolean(KEY_FINAL, false)) {
-            fail(if (target == "locked") "Lock didn't confirm" else "Unlock didn't confirm")
+            fail(if (target == "locked") lockBlocked() ?: "Lock didn't confirm" else "Unlock didn't confirm")
         }
     }
+
+    /** When locking fails, name whatever is open (that's usually why). */
+    private fun lockBlocked(): String? =
+        prefs.alerts.filterNot { it.endsWith("unlocked") }.takeIf { it.isNotEmpty() }
+            ?.let { "Can't lock: " + it.joinToString(", ") }
 
     private suspend fun fail(msg: String) {
         if (inputData.getString(KEY_ACTION) != ACTION_DOOR) prefs.pending = ""

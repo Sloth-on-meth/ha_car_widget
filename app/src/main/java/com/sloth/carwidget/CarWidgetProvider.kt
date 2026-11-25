@@ -148,9 +148,7 @@ class CarWidgetProvider : AppWidgetProvider() {
 
 
             val (sub, subColor) = when {
-                busy -> (if (p.pending == "locked") "Locking…" else "Unlocking…") to GREY
-                p.doorPending -> "Opening door…" to GREY
-                p.result.isNotEmpty() -> p.result to (if (p.resultOk) GREEN else RED)
+                p.result.isNotEmpty() && !p.resultOk -> p.result to RED
                 p.error.isNotEmpty() -> p.error to RED
                 alerts.isNotEmpty() -> alerts.joinToString(", ") to ORANGE
                 else -> "" to GREY

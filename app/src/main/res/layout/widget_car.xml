@@ -26,35 +26,47 @@
             android:scaleType="fitCenter"
             android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/status_icon"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:src="@drawable/ic_lock" />
-
-        <ImageView
-            android:id="@+id/warn_icon"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginStart="4dp"
-            android:src="@drawable/ic_warning"
-            android:visibility="gone" />
-
+        <!-- Lock icon with a tiny caption underneath, only shown for problems. -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/status_icon"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:src="@drawable/ic_lock" />
+
+                <ImageView
+                    android:id="@+id/warn_icon"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/ic_warning"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/status_sub"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
                 android:ellipsize="end"
+                android:gravity="center"
+                android:maxWidth="96dp"
                 android:maxLines="2"
                 android:text=""
                 android:textColor="#FF9800"
-                android:textSize="12sp" />
+                android:textSize="9sp"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 
