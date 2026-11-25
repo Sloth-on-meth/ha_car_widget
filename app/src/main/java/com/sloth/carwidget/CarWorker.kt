@@ -108,9 +108,7 @@ class CarWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, p
         prefs.lockState = client.getState(prefs.lockEntity).state
 
         val fuel = client.getState(prefs.fuelEntity)
-        val pct = fuel.state.toDoubleOrNull()
-        prefs.fuel = pct?.let { "${it.toInt()}${fuel.unit.ifEmpty { "%" }}" } ?: "–"
-        prefs.litres = if (pct != null && prefs.tankLitres > 0) "${Math.round(pct / 100 * prefs.tankLitres)} L" else ""
+        prefs.fuel = fuel.state.toDoubleOrNull()?.let { "${it.toInt()}${fuel.unit.ifEmpty { "%" }}" } ?: "–"
 
         val range = client.getState(prefs.rangeEntity)
         prefs.range = range.state.toDoubleOrNull()?.let { "${it.toInt()} ${range.unit}".trim() } ?: "–"

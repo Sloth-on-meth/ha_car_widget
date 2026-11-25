@@ -170,7 +170,7 @@ class CarWidgetProvider : AppWidgetProvider() {
                     else -> 0xFFFFFFFF.toInt()
                 }
             )
-            v.setTextViewText(R.id.range, listOf(p.litres, p.range).filter { it.isNotEmpty() }.joinToString(" · "))
+            v.setTextViewText(R.id.range, p.range)
             v.setTextViewText(R.id.odometer, p.odometer)
             v.setViewVisibility(R.id.odometer, if (p.odometer.isEmpty()) View.GONE else View.VISIBLE)
             return v

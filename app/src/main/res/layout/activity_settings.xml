@@ -37,13 +37,6 @@
         <TextView style="@style/Label" android:text="Odometer entity" />
         <EditText android:id="@+id/odometer_entity" style="@style/Entity" />
 
-        <TextView style="@style/Label" android:text="Tank size in litres (0 = hide litres)" />
-        <EditText
-            android:id="@+id/tank"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number" />
-
         <TextView style="@style/Label" android:text="Downstairs door switch (blank = hide button)" />
         <EditText android:id="@+id/door_entity" style="@style/Entity" />
 

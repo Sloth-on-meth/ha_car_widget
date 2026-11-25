@@ -48,11 +48,6 @@ class Prefs(context: Context) {
         get() = sp.getString("odometer_entity", DEFAULT_ODOMETER) ?: DEFAULT_ODOMETER
         set(v) = sp.edit().putString("odometer_entity", v.trim()).apply()
 
-    /** Tank size in litres for the "≈ L" estimate; 0 = don't show litres. */
-    var tankLitres: Int
-        get() = sp.getInt("tank_litres", 36)
-        set(v) = sp.edit().putInt("tank_litres", v).apply()
-
     var nagEnabled: Boolean
         get() = sp.getBoolean("nag", true)
         set(v) = sp.edit().putBoolean("nag", v).apply()
@@ -115,9 +110,6 @@ class Prefs(context: Context) {
     var lon: String
         get() = sp.getString("s_lon", "") ?: ""
         set(v) = sp.edit().putString("s_lon", v).apply()
-    var litres: String
-        get() = sp.getString("s_litres", "") ?: ""
-        set(v) = sp.edit().putString("s_litres", v).apply()
     var odometer: String
         get() = sp.getString("s_odo", "") ?: ""
         set(v) = sp.edit().putString("s_odo", v).apply()

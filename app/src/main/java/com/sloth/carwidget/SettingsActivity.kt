@@ -37,7 +37,6 @@ class SettingsActivity : Activity() {
         val alerts = findViewById<EditText>(R.id.alert_entities)
         val confirm = findViewById<CheckBox>(R.id.confirm_unlock)
         val odo = findViewById<EditText>(R.id.odometer_entity)
-        val tank = findViewById<EditText>(R.id.tank)
         val door = findViewById<EditText>(R.id.door_entity)
         val tracker = findViewById<EditText>(R.id.tracker_entity)
         val warning = findViewById<EditText>(R.id.warning_entity)
@@ -58,7 +57,6 @@ class SettingsActivity : Activity() {
         confirm.isChecked = prefs.confirmUnlock
         sound.isChecked = prefs.sound
         odo.setText(prefs.odometerEntity)
-        tank.setText(prefs.tankLitres.toString())
         door.setText(prefs.doorEntity)
         tracker.setText(prefs.trackerEntity)
         warning.setText(prefs.warningEntity)
@@ -78,7 +76,6 @@ class SettingsActivity : Activity() {
             prefs.confirmUnlock = confirm.isChecked
             prefs.sound = sound.isChecked
             prefs.odometerEntity = odo.text.toString()
-            prefs.tankLitres = tank.text.toString().toIntOrNull()?.coerceAtLeast(0) ?: 0
             prefs.doorEntity = door.text.toString()
             prefs.trackerEntity = tracker.text.toString()
             prefs.warningEntity = warning.text.toString()
