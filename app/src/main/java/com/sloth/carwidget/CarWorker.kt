@@ -139,6 +139,8 @@ class CarWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, p
             health -> "Vehicle health issue"
             else -> ""
         }
+        optional(client, prefs.tripEntity)?.let { Trips.check(applicationContext, prefs, it.attrs) }
+
         val driving = optional(client, prefs.drivingEntity)?.state == "on"
         checkUnlockedNag(driving)
 

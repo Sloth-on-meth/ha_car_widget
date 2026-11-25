@@ -48,6 +48,17 @@ class Prefs(context: Context) {
         get() = sp.getString("odometer_entity", DEFAULT_ODOMETER) ?: DEFAULT_ODOMETER
         set(v) = sp.edit().putString("odometer_entity", v.trim()).apply()
 
+    var tripEntity: String
+        get() = sp.getString("trip_entity", DEFAULT_TRIPS) ?: DEFAULT_TRIPS
+        set(v) = sp.edit().putString("trip_entity", v.trim()).apply()
+    var tripNotify: Boolean
+        get() = sp.getBoolean("trip_notify", true)
+        set(v) = sp.edit().putBoolean("trip_notify", v).apply()
+    /** id of the newest trip we've seen ("" = never looked yet). */
+    var lastTripId: String
+        get() = sp.getString("s_last_trip", "") ?: ""
+        set(v) = sp.edit().putString("s_last_trip", v).apply()
+
     var nagEnabled: Boolean
         get() = sp.getBoolean("nag", true)
         set(v) = sp.edit().putBoolean("nag", v).apply()
@@ -142,6 +153,7 @@ class Prefs(context: Context) {
         const val DEFAULT_FUEL = "sensor.${CAR}_fuel_level"
         const val DEFAULT_RANGE = "sensor.${CAR}_fuel_range"
         const val DEFAULT_ODOMETER = "sensor.${CAR}_odometer"
+        const val DEFAULT_TRIPS = "sensor.${CAR}_recent_trips"
         const val DEFAULT_DOOR = "switch.dooropener_zigbee"
         const val DEFAULT_TRACKER = "device_tracker.${CAR}_parking_location"
         const val DEFAULT_WARNING = "sensor.${CAR}_warning_lights"

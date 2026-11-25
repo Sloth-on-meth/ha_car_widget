@@ -36,6 +36,8 @@ class SettingsActivity : Activity() {
         val range = findViewById<EditText>(R.id.range_entity)
         val alerts = findViewById<EditText>(R.id.alert_entities)
         val confirm = findViewById<CheckBox>(R.id.confirm_unlock)
+        val tripNotify = findViewById<CheckBox>(R.id.trip_notify)
+        val trips = findViewById<EditText>(R.id.trip_entity)
         val odo = findViewById<EditText>(R.id.odometer_entity)
         val door = findViewById<EditText>(R.id.door_entity)
         val tracker = findViewById<EditText>(R.id.tracker_entity)
@@ -56,6 +58,8 @@ class SettingsActivity : Activity() {
         alerts.setText(prefs.alertEntities.joinToString("\n"))
         confirm.isChecked = prefs.confirmUnlock
         sound.isChecked = prefs.sound
+        tripNotify.isChecked = prefs.tripNotify
+        trips.setText(prefs.tripEntity)
         odo.setText(prefs.odometerEntity)
         door.setText(prefs.doorEntity)
         tracker.setText(prefs.trackerEntity)
@@ -75,6 +79,8 @@ class SettingsActivity : Activity() {
             prefs.alertEntities = alerts.text.lines()
             prefs.confirmUnlock = confirm.isChecked
             prefs.sound = sound.isChecked
+            prefs.tripNotify = tripNotify.isChecked
+            prefs.tripEntity = trips.text.toString()
             prefs.odometerEntity = odo.text.toString()
             prefs.doorEntity = door.text.toString()
             prefs.trackerEntity = tracker.text.toString()

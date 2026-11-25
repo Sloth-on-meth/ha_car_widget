@@ -82,6 +82,15 @@
             android:text="Vibrate" />
 
         <CheckBox
+            android:id="@+id/trip_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trip summary after each drive" />
+
+        <TextView style="@style/Label" android:text="Recent trips sensor" />
+        <EditText android:id="@+id/trip_entity" style="@style/Entity" />
+
+        <CheckBox
             android:id="@+id/nag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
